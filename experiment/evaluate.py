@@ -9,6 +9,11 @@ from datasets import load_dataset
 from huggingface_hub import snapshot_download
 
 def load_schema():
+    TABLES_JSON_URL = "https://raw.githubusercontent.com/taoyds/spider/master/tables.json"
+    if not os.path.exists("tables.json"):
+        import urllib.request
+        urllib.request.urlretrieve(TABLES_JSON_URL, "tables.json")
+
     with open("tables.json") as f:
         tables_raw = json.load(f)
     schema_by_db = {}
