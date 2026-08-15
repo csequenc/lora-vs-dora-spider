@@ -22,7 +22,7 @@ for step in range(500):
     delta_V = B @ A
     V_new = V + delta_V
     col_norm = torch.linalg.norm(V_new, dim=0, keepdim=True)  # per-column norm
-    direction = V_new / col_norm
+    direction = V_new / (col_norm + 1e-12) # avoid division by zero
     W = m * direction
     output = W @ x
 

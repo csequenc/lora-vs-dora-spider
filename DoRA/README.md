@@ -27,7 +27,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 base = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-1.5B")
 model = PeftModel.from_pretrained(base, "path/to/this/folder")
-tokenizer = AutoTokenizer.from_pretrained("path/to/this/folder")
+tokenizer = AutoTokenizer.from_pretrained("../tokenizer")
 ```
 
 This adapter is part of a small comparative study, not a general-purpose
