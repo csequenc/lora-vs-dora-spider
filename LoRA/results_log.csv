@@ -1,0 +1,2 @@
+run_name,adapter_dir,eval_n,execution_accuracy
+rank8_lora_seed42,/content/rank8_lora_seed42,300,0.42333333333333334
