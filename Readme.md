@@ -10,5 +10,6 @@ This repo has two parts:
   analysis, and an honest writeup of what did (and didn't) show up.
 - `LoRA/` — the trained adapter weights from the experiment for LoRA.
 - `DoRA/` - the trained adapter weights from the experiment for DoRA.
+- `tokenizer`
 
 See `experiment/README.md` for the full writeup and findings.
