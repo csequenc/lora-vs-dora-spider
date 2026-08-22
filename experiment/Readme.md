@@ -13,7 +13,39 @@ Most published DoRA results are on larger models and larger training budgets. Th
 - **Training data:** 3,000 examples from Spider's training split
 - **Adapters compared:** LoRA and DoRA, both rank 8, `lora_alpha=16`, targeting `q_proj/k_proj/v_proj/o_proj`, identical hyperparameters otherwise (learning rate, batch size, epochs) — the only difference between the two runs is the `use_dora` flag in PEFT's `LoraConfig`
 - **Evaluation:** Execution accuracy on 300 examples from Spider's dev set — a predicted query counts as correct if running it against the actual database returns the same result set as the gold query, regardless of surface-level SQL differences (this is the standard metric in text-to-SQL literature, e.g. the Spider benchmark itself)
-- **Seeds:** single run per method (no repeated seeds) — a limitation, discussed below
+
+- ## Seed robustness check
+
+To test whether the seed-42 accuracy gap reflected a real method difference
+or ordinary training noise, both adapters were retrained and re-evaluated
+across two additional seeds (43, 44), same hyperparameters otherwise.
+
+| | Seed 42 | Seed 43 | Seed 44 |
+|---|---|---|---|
+| LoRA | 0.4233 | 0.4567 | 0.4233 |
+| DoRA | 0.4133 | 0.4167 | 0.4267 |
+| Gap (LoRA − DoRA) | +1.0 pts | +4.0 pts | −0.3 pts |
+
+The gap not only varies in size across seeds but **flips sign** in seed 44 —
+DoRA is marginally ahead. LoRA's own accuracy alone swings by 3.3 points
+across seeds (0.4233 to 0.4567), which exceeds every observed LoRA-vs-DoRA
+gap. This confirms the original conclusion with stronger evidence than a
+single seed could: at rank 8 on this model/task/scale, there is no
+consistent, directional advantage for either method — the aggregate
+accuracy differences reported in isolated single-seed comparisons (including
+this project's own seed-42 run) are training noise, not a real effect.
+
+## Training cost
+
+DoRA was consistently slower to train than LoRA across all three seeds —
+roughly 18-30 minutes longer per run, with throughput around 0.04 it/s for
+DoRA versus 0.05 it/s for LoRA (a ~20% slower iteration rate). This matches
+expectations from the method: DoRA computes a column-wise norm of the
+updated weight at every forward pass and has a more involved backward pass
+than LoRA's plain low-rank update (see Section 4.2-4.3 of the DoRA paper).
+This cost is consistent and structural, unlike the accuracy comparison above
+— even where DoRA shows no measurable accuracy benefit at this scale, it
+carries a measurable, repeatable compute overhead.
 
 ## Results
 
