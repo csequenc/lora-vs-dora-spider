@@ -25,7 +25,7 @@ Full methodology, per-example analysis and limitations are in [`experiment/READM
 | `DoRA/` | Trained DoRA adapter weights from the experiment. |
 | `tokenizer/` | Tokenizer files used with the adapters. |
 
-> Note: state here which seed the saved adapters in `LoRA/` and `DoRA/` come from.
+> Note: The saved adapters in `LoRA/` and `DoRA/` come from seed 42.
 
 ## Quick start
 
